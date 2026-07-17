@@ -19,6 +19,18 @@
 </head>
 <body>
 
+  <div id="project-modal" class="modal-overlay">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <div class="modal-body">
+      <!-- Media will be dynamically loaded here -->
+      <div id="modal-media-container"></div>
+      <h3 id="modal-title"></h3>
+      <p id="modal-description"></p>
+    </div>
+  </div>
+</div>
+
   <!-- Card 1 -->
 <div class="project-card" data-project-id="nova" data-category="apps">
     <!-- Card content... -->
@@ -218,7 +230,7 @@
 
             <div class="projects-grid">
                 <!-- Project 1 -->
-                <div class="project-card" data-project-id="uncanny-valley" data-category="apps">
+                <div class="project-card" data-project-id="uncanny-valley" data-category="apps" data-asset="assets/images/p1finalg.png">
                     <div class="project-image-wrapper">
                         <img src="assets/images/p1finalg.png" alt="Nova Cloud Dashboard Mockup" class="project-image" id="proj-img-1">
                         <div class="project-overlay">
@@ -246,7 +258,7 @@
                 </div>
 
                 <!-- Project 2 -->
-                <div class="project-card" data-project-id="quasi-object" data-category="design">
+                <div class="project-card" data-project-id="quasi-object" data-category="design" data-asset="assets/images/toydoll4.glb">
                     <div class="project-image-wrapper">
                         <img src="assets/images/p2finalg.png" alt="Aether Design System Mockup" class="project-image" id="proj-img-2">
                         <div class="project-overlay">
