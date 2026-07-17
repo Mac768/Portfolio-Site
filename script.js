@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
+
     // Determine initial theme
     let currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', currentTheme);
@@ -90,11 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             projectCards.forEach(card => {
                 const category = card.getAttribute('data-category');
-                
+
                 // Add fade-out visual transition first
                 card.style.opacity = '0';
                 card.style.transform = 'scale(0.95) translateY(10px)';
-                
+
                 setTimeout(() => {
                     if (filterValue === 'all' || category === filterValue) {
                         card.style.display = 'flex';
@@ -158,11 +158,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             // Simple visual response for form submission
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            
+
             submitBtn.disabled = true;
             submitBtn.style.background = 'var(--accent-tertiary)';
             submitBtn.innerHTML = `
@@ -180,4 +180,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 3000);
         });
     }
+});
+
+// Get DOM Elements
+const modal = document.getElementById('project-modal');
+const closeBtn = document.querySelector('.close-btn');
+const modalTitle = document.getElementById('modal-title');
+
+// 1. Attach click event to all your project cards/links
+// Change '.project-card' to whatever class your grid elements use
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('click', (e) => {
+    e.preventDefault(); // Prevents page reload if using <a> tags
+
+    // Optional: Get the project name dynamically from the clicked card
+    const cardTitle = card.querySelector('h2').innerText;
+    modalTitle.innerText = cardTitle;
+
+    // Show the modal
+    modal.style.display = 'flex';
+  });
+});
+
+// 2. Close modal when clicking the 'X' button
+closeBtn.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+
+// 3. Close modal if clicking outside the modal box (on the overlay)
+window.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.style.display = 'none';
+  }
 });
