@@ -158,3 +158,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+const modal = document.getElementById('project-modal');
+const closeBtn = document.querySelector('.close-btn');
+const modalTitle = document.getElementById('modal-title');
+const modalDescription = document.getElementById('modal-description');
+const mediaContainer = document.getElementById('modal-media-container');
+
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('click', (e) => {
+    // If user clicks a github or live link, let the link handle the event instead of launching the modal
+    if (e.target.closest('.project-links')) return;
+
+    e.preventDefault();
+
+    const titleText = card.querySelector('.project-title').innerText;
+    const descriptionText = card.querySelector('.project-description').innerText;
+    const assetPath = card.getAttribute('data-asset');
+
+    // Reset media container content
+    mediaContainer.innerHTML = '';
+
+    // Check file extension to render an Image or 3D Model
+    if (assetPath) {
+      if (assetPath.endsWith('.glb')) {
+        // Insert 3D viewer tag
+        mediaContainer.innerHTML = `
+          <model-viewer src="${assetPath}"
+                        camera-controls
+                        auto-rotate
+                        shadow-intensity="1"
+                        style="width: 100%; height: 350px; background-color: #0d0d17; border-radius: 6px;">
+          </model-viewer>`;
+      } else {
+        // Insert standard image tag
+        mediaContainer.innerHTML = `<img src="${assetPath}" alt="${titleText}" style="width: 100%; max-height: 350px; object-fit: contain; border-radius: 6px; margin-bottom: 15px;">`;
+      }
+    }
+
+    // Populate Text Strings
+    modalTitle.innerText = titleText;
+    modalDescription.innerText = descriptionText;
+
+    // Open Window
+    modal.classList.add('active');
+  });
+});
+
+// Close UI Event Triggers
+closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+window.addEventListener('click', (e) => {
+  if (e.target === modal) modal.classList.remove('active');
+});
