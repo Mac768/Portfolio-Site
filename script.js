@@ -332,3 +332,42 @@ window.addEventListener('keydown', (e) => {
         closeModal();
     }
 });
+
+// Get Modal DOM Elements
+const modal = document.getElementById('project-modal');
+const closeBtn = document.querySelector('.close-btn');
+const modalTitle = document.getElementById('modal-title');
+const modalDescription = document.getElementById('modal-description');
+
+// 1. Use a flexible selector to find your cards.
+// If your classes are named differently (e.g., .card, .work-item), add them to the query below, separated by commas.
+const projectCards = document.querySelectorAll('.project-card, .grid-item, [class*="card"]');
+
+projectCards.forEach(card => {
+  card.addEventListener('click', (e) => {
+    // Prevent links from redirecting or jumping the page
+    e.preventDefault();
+
+    // Find the closest card container to ensure we capture the right data
+    const targetCard = e.target.closest('.project-card, .grid-item, [class*="card"]');
+    if (!targetCard) return;
+
+    // Pull content, safely checking if the element exists
+    const titleElement = targetCard.querySelector('h2, h3');
+    const descElement = targetCard.querySelector('p');
+
+    const titleText = titleElement ? titleElement.innerText : 'Project Title';
+    const descriptionText = descElement ? descElement.innerText : 'No description available.';
+
+    // Inject and display
+    modalTitle.innerText = titleText;
+    modalDescription.innerText = descriptionText;
+    modal.classList.add('active');
+  });
+});
+
+// 2. Close modal events (Keep these the same)
+closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+window.addEventListener('click', (e) => {
+  if (e.target === modal) modal.classList.remove('active');
+});
