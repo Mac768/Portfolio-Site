@@ -180,48 +180,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 3000);
         });
     }
-});
 
 // --- 8. Project Details Modal Logic ---
 const projectDetails = {
-    'nova': {
-        title: 'Nova Cloud Dashboard',
-        image: 'assets/images/project-1.jpg',
-        tags: ['Web App', 'TypeScript', 'WebSockets'],
-        description: 'A next-generation cloud infrastructure management portal featuring live socket streams, visual canvas grids, and lightweight animations. It allows teams to monitor distributed microservices in real-time, scale compute resources dynamically, and configure custom alerts via a drag-and-drop workspace layout.',
+    'uncanny-valley': {
+        title: 'Uncanny Valley',
+        image: 'assets/images/p1finalg.png',
+        glb: 'assets/images/toydoll4.glb',
+        tags: ['Photoshop', 'Realtime 3D', 'Analysis'],
+        description: 'This project explores how the uncanny valley emerges inside the visual language of Pokémon cards — a space that blends nostalgia, character design, and highly stylized illustration. My goal was to examine why certain cards feel charming and alive while others slip into something slightly off: proportions that feel too perfect, expressions that hover between human and creature, or rendering styles that push realism just a little too far.',
         features: [
-            'Real-time WebSocket streaming with < 50ms latency',
-            'Interactive visual topology map using HTML5 Canvas',
-            'Customizable widget grid with local persistence',
-            'Sleek theme-aware telemetry charting with Chart.js'
+            'Analysis of Pokémon card visual language and aesthetics',
+            'Realtime 3D interactive study of creative artifacts using toydoll4.glb',
+            'High-resolution digital reconstruction & custom textures'
         ],
         github: 'https://github.com',
-        live: 'https://github.com'
+        live: 'https://acrobat.adobe.com/id/urn:aaid:sc:VA6C2:3ee11ad7-57cb-4368-8385-19df9f7a56a3'
     },
-    'aether': {
-        title: 'Aether Design System',
-        image: 'assets/images/project-2.jpg',
-        tags: ['Design System', 'CSS Grid', 'Figma'],
-        description: 'A custom, micro-interaction-focused layout and components bundle providing dynamic layouts, complex tables, and high-fidelity overlays. Designed to help frontend developers build cohesive and accessible user interfaces rapidly with zero-config dark mode support.',
+    'quasi-object': {
+        title: 'Quasi-Object',
+        image: 'assets/images/p2finalg.png',
+        tags: ['Blender', '3D Design', 'Interactive'],
+        description: 'This project investigates the nature of a quasi‑object — a form that never settles into a single, stable identity but instead becomes “real” only through perception, camera position, and digital interaction. Using Blender, I will construct a 3D object whose meaning continuously shifts depending on how it is viewed, lit, or animated. Rather than functioning as a fixed asset, the object behaves like a mutable presence: part illusion, part structure, part performance.',
         features: [
-            'CSS Custom Properties theme token engine',
-            'WCAG 2.1 AA compliant components out-of-the-box',
-            'Flexible custom CSS grid and flexbox utility wrappers',
-            'Pre-built visual layouts for landing and dashboard pages'
+            'Constructed dynamic meshes in Blender',
+            'Lighting and material tests under varied perspectives',
+            'Interactive digital sculpture logic'
         ],
         github: 'https://github.com',
-        live: 'https://github.com'
+        live: 'https://acrobat.adobe.com/id/urn:aaid:sc:VA6C2:2b427066-2a0e-478a-9555-58ef088197b3'
     },
     'chronos': {
         title: 'Chronos Task Runner',
         image: 'assets/images/project-3.jpg',
         tags: ['Library', 'JavaScript', 'Async'],
-        description: 'A microcron task automation executor in vanilla JavaScript designed to scale with serverless environments. Chronos handles heavy asynchronous workflows, retry queues, and cron-like timing loops while maintaining a tiny memory footprint.',
+        description: 'A microcron task automation executor in vanilla JavaScript designed to scale with serverless environments.',
         features: [
             'Extremely lightweight footprint (< 2KB gzipped)',
             'Auto-scaling execution queue with concurrency throttling',
-            'Robust retry backoff algorithms and crash recovery',
-            'Full support for standard 5-field cron syntax'
+            'Robust retry backoff algorithms and crash recovery'
         ],
         github: 'https://github.com',
         live: 'https://github.com'
@@ -231,6 +228,7 @@ const projectDetails = {
 const modal = document.getElementById('project-modal');
 const modalClose = document.getElementById('modal-close');
 const modalImg = document.getElementById('modal-img');
+const modal3d = document.getElementById('modal-3d');
 const modalTitle = document.getElementById('modal-title');
 const modalTagsContainer = document.getElementById('modal-tags');
 const modalDesc = document.getElementById('modal-desc');
@@ -253,11 +251,28 @@ projectCards.forEach(card => {
         const data = projectDetails[projectId];
         if (!data) return;
 
-        // Populate text & image
-        modalImg.src = data.image;
-        modalImg.alt = `${data.title} Mockup`;
+        // Populate text & details
         modalTitle.textContent = data.title;
         modalDesc.textContent = data.description;
+
+        // Handle 3D model loading vs static images
+        if (data.glb) {
+            // Hide static image, show 3D viewer
+            modalImg.style.display = 'none';
+            modal3d.style.display = 'block';
+
+            // Populate 3D viewer properties
+            modal3d.src = data.glb;
+            modal3d.poster = data.image; // Use the card preview image as poster loader
+            modal3d.alt = `${data.title} 3D Model`;
+        } else {
+            // Show static image, hide 3D viewer
+            modal3d.style.display = 'none';
+            modalImg.style.display = 'block';
+
+            modalImg.src = data.image;
+            modalImg.alt = `${data.title} Mockup`;
+        }
 
         // Build dynamic tag spans
         modalTagsContainer.innerHTML = '';
@@ -292,6 +307,10 @@ const closeModal = () => {
     modal.classList.remove('active');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = ''; // Resume background scrolling
+    // Clear 3D model source on close to free up resources
+    if (modal3d) {
+        modal3d.src = '';
+    }
 };
 
 if (modalClose) {
