@@ -184,7 +184,7 @@ document.querySelectorAll('.project-card').forEach(card => {
     const assetPath = card.getAttribute('data-asset');
     const featuresAttr = card.getAttribute('data-features');
 
-    // Check file type to render Image, 3D Model, or YouTube Video
+    // Check file type to render an Image or 3D Model
     if (assetPath) {
       if (assetPath.endsWith('.glb')) {
         // Insert 3D viewer tag
@@ -195,14 +195,6 @@ document.querySelectorAll('.project-card').forEach(card => {
                         shadow-intensity="1"
                         style="width: 100%; height: 350px; background-color: #0d0d17; border-radius: 6px;">
           </model-viewer>`;
-      if (assetPath.includes('youtube.com/') || assetPath.includes('youtu.be/')) {
-        // Insert YouTube embed URL
-        modalVideo.src = assetPath + "?autoplay=1&rel=0";
-        modalVideo.style.display = 'block';
-      } else if (assetPath.endsWith('.glb')) {
-        // Insert 3D viewer source
-        modal3d.src = assetPath;
-        modal3d.style.display = 'block';
       } else {
         // Insert standard image tag
          mediaContainer.innerHTML = `<img src="${assetPath}" alt="${titleText}" style="width: 100%; max-height: 350px; object-fit: contain; border-radius: 6px; margin-bottom: 15px;">`;
