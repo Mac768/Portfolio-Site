@@ -160,10 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const modal = document.getElementById('project-modal');
-const closeBtn = document.getElementById('modal-close');
+const closeBtn = document.querySelector('.close-btn');
 const modalTitle = document.getElementById('modal-title');
-const modalDescription = document.getElementById('modal-desc');
-const modalImg = document.getElementById('modal-img');
+const modalDescription = document.getElementById('modal-description');
+const mediaContainer = document.getElementById('modal-media-container');
 const modal3d = document.getElementById('modal-3d');
 const modalVideo = document.getElementById('modal-video');
 const modalTags = document.getElementById('modal-tags');
@@ -176,23 +176,25 @@ document.querySelectorAll('.project-card').forEach(card => {
     // If user clicks a github or live link, let the link handle the event instead of launching the modal
     if (e.target.closest('.project-links')) return;
 
-    e.preventDefault();
+    // Reset media container content
+   mediaContainer.innerHTML = '';
 
     const titleText = card.querySelector('.project-title').innerText;
     const descriptionText = card.querySelector('.project-description').innerText;
     const assetPath = card.getAttribute('data-asset');
     const featuresAttr = card.getAttribute('data-features');
 
-    // Reset media container content visibility
-    modalImg.style.display = 'none';
-    modalImg.src = '';
-    modal3d.style.display = 'none';
-    modal3d.src = '';
-    modalVideo.style.display = 'none';
-    modalVideo.src = '';
-
     // Check file type to render Image, 3D Model, or YouTube Video
     if (assetPath) {
+      if (assetPath.endsWith('.glb')) {
+        // Insert 3D viewer tag
+        mediaContainer.innerHTML = `
+          <model-viewer src="${assetPath}"
+                        camera-controls
+                        auto-rotate
+                        shadow-intensity="1"
+                        style="width: 100%; height: 350px; background-color: #0d0d17; border-radius: 6px;">
+          </model-viewer>`;
       if (assetPath.includes('youtube.com/') || assetPath.includes('youtu.be/')) {
         // Insert YouTube embed URL
         modalVideo.src = assetPath + "?autoplay=1&rel=0";
@@ -202,10 +204,8 @@ document.querySelectorAll('.project-card').forEach(card => {
         modal3d.src = assetPath;
         modal3d.style.display = 'block';
       } else {
-        // Insert standard image source
-        modalImg.src = assetPath;
-        modalImg.alt = titleText;
-        modalImg.style.display = 'block';
+        // Insert standard image tag
+         mediaContainer.innerHTML = `<img src="${assetPath}" alt="${titleText}" style="width: 100%; max-height: 350px; object-fit: contain; border-radius: 6px; margin-bottom: 15px;">`;
       }
     }
 
@@ -256,17 +256,7 @@ document.querySelectorAll('.project-card').forEach(card => {
 });
 
 // Close UI Event Triggers
-function closeModal() {
-  modal.classList.remove('active');
-  // Reset media elements to stop any audio or rendering
-  modalImg.src = '';
-  modal3d.src = '';
-  modalVideo.src = '';
-}
-
-if (closeBtn) {
-  closeBtn.addEventListener('click', closeModal);
-}
+closeBtn.addEventListener('click', () => modal.classList.remove('active'));
 window.addEventListener('click', (e) => {
-  if (e.target === modal) closeModal();
+    if (e.target === modal) modal.classList.remove('active');
 });
