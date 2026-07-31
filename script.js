@@ -164,27 +164,22 @@ const closeBtn = document.querySelector('.close-btn');
 const modalTitle = document.getElementById('modal-title');
 const modalDescription = document.getElementById('modal-description');
 const mediaContainer = document.getElementById('modal-media-container');
-const modal3d = document.getElementById('modal-3d');
-const modalVideo = document.getElementById('modal-video');
-const modalTags = document.getElementById('modal-tags');
-const modalFeaturesList = document.getElementById('modal-features-list');
-const modalLinkGithub = document.getElementById('modal-link-github');
-const modalLinkLive = document.getElementById('modal-link-live');
 
 document.querySelectorAll('.project-card').forEach(card => {
   card.addEventListener('click', (e) => {
     // If user clicks a github or live link, let the link handle the event instead of launching the modal
     if (e.target.closest('.project-links')) return;
 
-    // Reset media container content
-   mediaContainer.innerHTML = '';
+    e.preventDefault();
 
     const titleText = card.querySelector('.project-title').innerText;
     const descriptionText = card.querySelector('.project-description').innerText;
     const assetPath = card.getAttribute('data-asset');
-    const featuresAttr = card.getAttribute('data-features');
 
-    // Check file type to render an Image or 3D Model
+    // Reset media container content
+    mediaContainer.innerHTML = '';
+
+    // Check file extension to render an Image or 3D Model
     if (assetPath) {
       if (assetPath.endsWith('.glb')) {
         // Insert 3D viewer tag
@@ -197,50 +192,13 @@ document.querySelectorAll('.project-card').forEach(card => {
           </model-viewer>`;
       } else {
         // Insert standard image tag
-         mediaContainer.innerHTML = `<img src="${assetPath}" alt="${titleText}" style="width: 100%; max-height: 350px; object-fit: contain; border-radius: 6px; margin-bottom: 15px;">`;
+        mediaContainer.innerHTML = `<img src="${assetPath}" alt="${titleText}" style="width: 100%; max-height: 350px; object-fit: contain; border-radius: 6px; margin-bottom: 15px;">`;
       }
     }
 
     // Populate Text Strings
     modalTitle.innerText = titleText;
     modalDescription.innerText = descriptionText;
-
-    // Populate Tags
-    modalTags.innerHTML = '';
-    card.querySelectorAll('.project-tag').forEach(tag => {
-      const tagSpan = document.createElement('span');
-      tagSpan.className = 'project-tag';
-      tagSpan.innerText = tag.innerText;
-      modalTags.appendChild(tagSpan);
-    });
-
-    // Populate Features
-    modalFeaturesList.innerHTML = '';
-    if (featuresAttr) {
-      featuresAttr.split('|').forEach(feat => {
-        const li = document.createElement('li');
-        li.innerText = feat;
-        modalFeaturesList.appendChild(li);
-      });
-    }
-
-    // Populate Action Links
-    const githubLink = card.querySelector('.project-links a[aria-label="View source code"]');
-    const liveLink = card.querySelector('.project-links a[aria-label="View live link"]');
-
-    if (githubLink && modalLinkGithub) {
-      modalLinkGithub.href = githubLink.href;
-      modalLinkGithub.style.display = 'inline-flex';
-    } else if (modalLinkGithub) {
-      modalLinkGithub.style.display = 'none';
-    }
-
-    if (liveLink && modalLinkLive) {
-      modalLinkLive.href = liveLink.href;
-      modalLinkLive.style.display = 'inline-flex';
-    } else if (modalLinkLive) {
-      modalLinkLive.style.display = 'none';
-    }
 
     // Open Window
     modal.classList.add('active');
@@ -250,5 +208,5 @@ document.querySelectorAll('.project-card').forEach(card => {
 // Close UI Event Triggers
 closeBtn.addEventListener('click', () => modal.classList.remove('active'));
 window.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.remove('active');
+  if (e.target === modal) modal.classList.remove('active');
 });
